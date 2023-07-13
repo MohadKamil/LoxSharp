@@ -33,4 +33,32 @@ public class ScannerTests
         stringToken.TokenType.Should().Be(TokenType.NUMBER);
         stringToken.Literal.Should().Be(1234);
     }
+    
+    [Fact]
+    public void ForVarKeyword_VarTokenShouldBeCreated()
+    {
+        var scanner = new Scanner("var");
+
+        var tokens = scanner.GetTokens();
+
+        tokens.Should().HaveCount(1);
+
+        var stringToken = tokens.First();
+
+        stringToken.TokenType.Should().Be(TokenType.VAR);
+    }
+    
+    [Fact]
+    public void ForVariableInitialization_MatchingTokensShouldBeCreated()
+    {
+        var scanner = new Scanner("var text = \"Hello World\";");
+
+        var tokens = scanner.GetTokens();
+
+        tokens.Should().HaveCount(5);
+
+        var stringToken = tokens.First();
+
+        stringToken.TokenType.Should().Be(TokenType.VAR);
+    }
 }

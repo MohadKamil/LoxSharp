@@ -4,6 +4,26 @@ public class Scanner
 {
     private readonly string code;
     private readonly IList<Token> tokens = new List<Token>();
+
+    private readonly IDictionary<string, TokenType?> keywords = new Dictionary<string, TokenType?>
+    {
+        { "and", AND },
+        { "class", CLASS },
+        { "else", ELSE },
+        { "false", FALSE },
+        { "for", FOR },
+        { "fun", FUN },
+        { "if", IF },
+        { "nil", NIL },
+        { "or", OR },
+        { "print", PRINT },
+        { "return", RETURN },
+        { "super", SUPER },
+        { "this", THIS },
+        { "true", TRUE },
+        { "var", VAR },
+        { "while", WHILE }
+    };
     private int start = 0;
     private int current = 0;
     private int line = 1;
@@ -105,12 +125,29 @@ public class Scanner
                 {
                     NumberToken();
                 }
+                else if(IsAlpha(c[0]))
+                {
+                    IdentifierToken();
+                }
                 else
                 {
                     Lox.Error(line, "Unexpected character");   
                 }
                 break;
         }
+    }
+
+    private void IdentifierToken()
+    {
+        while (AcceptedIdentifierLetter(Peek()[0]))
+        {
+            Advance();
+        }
+
+        var text = code[start..current];
+        keywords.TryGetValue(text, out var tokenType);
+        tokenType ??= IDENTIFIER;
+        AddToken(tokenType.Value);
     }
 
     private void NumberToken()
@@ -166,7 +203,7 @@ public class Scanner
     
     private void AddToken(TokenType tokenType, object? literal = null)
     {
-        var lexeme = code.Substring(start, current);
+        var lexeme = code[start..current];
         tokens.Add(new Token(tokenType, lexeme,literal, line));
     }
 
@@ -187,6 +224,16 @@ public class Scanner
     private bool AtEnd()
     {
         return current >= _codeLength;
+    }
+
+    private static bool IsAlpha(char c)
+    {
+        return char.IsLetter(c) || c == '_';
+    }
+    
+    private static bool AcceptedIdentifierLetter(char c)
+    {
+        return char.IsLetterOrDigit(c) || c == '_';
     }
     
     private string PeekNext()
