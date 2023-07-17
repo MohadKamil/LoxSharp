@@ -2,7 +2,7 @@
 
 namespace LoxSharp.Expressions;
 
-class ASTPrinter: IVisitor<string>
+public class ASTPrinter: IVisitor<string>
 {
 
     public string Print(Expression expression)
