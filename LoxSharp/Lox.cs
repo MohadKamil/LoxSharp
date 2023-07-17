@@ -1,4 +1,7 @@
-﻿namespace LoxSharp;
+﻿using LoxSharp.Expressions;
+using LoxSharp.Parsing;
+
+namespace LoxSharp;
 
 public class Lox
 {
@@ -38,16 +41,27 @@ public class Lox
     {
         var scanner = new Scanner(code);
 
-        var tokens = scanner.GetTokens();
+        var tokens = scanner.GetTokens().ToList();
 
-        foreach (var t in tokens)
-        {
-            Console.WriteLine(t);
-        }
+        var parser = new Parser(tokens.ToList());
+
+        var expression = parser.Parse();
+
+        if (expression == null) return;
+        
+        Console.WriteLine(new ASTPrinter().Print(expression));
     }
 
     public static void Error(int line, string message) {
         Report(line, string.Empty, message);
+    }
+    
+    public static void Error(Token token, string message) {
+        if (token.TokenType == TokenType.EOF) {
+            Report(token.Line, " at end", message);
+        } else {
+            Report(token.Line, " at '" + token.Lexeme + "'", message);
+        }
     }
 
     private static void Report(int line, string where, string message) {
