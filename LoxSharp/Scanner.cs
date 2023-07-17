@@ -43,7 +43,7 @@ public class Scanner
             GenerateToken();
         }
         
-        return tokens;
+        return tokens.Concat(new []{new Token(EOF,"",null,1)});
     }
 
     private void GenerateToken()
