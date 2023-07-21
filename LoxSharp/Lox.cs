@@ -1,4 +1,5 @@
 ﻿using LoxSharp.Expressions;
+using LoxSharp.Interpreting;
 using LoxSharp.Parsing;
 
 namespace LoxSharp;
@@ -6,7 +7,9 @@ namespace LoxSharp;
 public class Lox
 {
     private static bool _hadError;
-    
+    private static bool hadRuntimeError;
+    private static readonly Interpreter interpreter = new Interpreter();
+
     internal static void RunFile(string filePath)
     {
         var code = File.ReadAllText(filePath);
@@ -14,6 +17,8 @@ public class Lox
         
         if(_hadError) 
             Environment.Exit(65);
+        if (hadRuntimeError) 
+            Environment.Exit(70);
     }
 
     internal static void RunPrompt()
@@ -49,7 +54,13 @@ public class Lox
 
         if (expression == null) return;
         
-        Console.WriteLine(new ASTPrinter().Print(expression));
+        interpreter.Interpret(expression);
+    }
+    
+    internal static void RuntimeError(RuntimeException exception) {
+        
+        Console.WriteLine(exception.Message + Environment.NewLine + $"[Line {exception.Token.Line}]");
+        hadRuntimeError = true;
     }
 
     public static void Error(int line, string message) {
