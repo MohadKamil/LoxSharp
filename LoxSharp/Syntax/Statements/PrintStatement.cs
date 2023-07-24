@@ -1,6 +1,8 @@
-﻿namespace LoxSharp.Syntax.Statements;
+﻿using LoxSharp.Expressions;
 
-public record PrintStatement(object Value) : Statement
+namespace LoxSharp.Syntax.Statements;
+
+public record PrintStatement(Expression Expression) : Statement
 {
     public override void Accept(IStatementVisitor visitor)
     {
