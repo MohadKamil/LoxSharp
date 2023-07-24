@@ -4,6 +4,18 @@ public class LoxEnvironment
 {
     private readonly IDictionary<string, object> values = new Dictionary<string, object>();
 
+    private readonly LoxEnvironment? parentLoxEnvironment;
+
+    public LoxEnvironment(): this(null)
+    {
+        
+    }
+    
+    public LoxEnvironment(LoxEnvironment? parentLoxEnvironment)
+    {
+        this.parentLoxEnvironment = parentLoxEnvironment;
+    }
+
     public void Define(string name, object value)
     {
         values[name] = value;
@@ -11,20 +23,30 @@ public class LoxEnvironment
 
     public object Get(Token name)
     {
-        if (!values.ContainsKey(name.Lexeme))
+        if (values.TryGetValue(name.Lexeme, out var value))
         {
-            throw new RuntimeException(name, "Undefined variable '" + name.Lexeme + "'.");
+            return value;
         }
-        return values[name.Lexeme];
+        if (parentLoxEnvironment is not null)
+        {
+            return parentLoxEnvironment.Get(name);
+        }
+        throw new RuntimeException(name, "Undefined variable '" + name.Lexeme + "'.");
     }
 
     public void Assign(Token name, object value)
     {
-        if (!values.ContainsKey(name.Lexeme))
+        if (values.ContainsKey(name.Lexeme))
         {
-            throw new RuntimeException(name, "Undefined variable '" + name.Lexeme + "'.");
+            values[name.Lexeme] = value;   
+            return;
         }
 
-        values[name.Lexeme] = value;
+        if (parentLoxEnvironment is not null)
+        {
+            parentLoxEnvironment.Assign(name,value);
+            return;
+        }
+        throw new RuntimeException(name, "Undefined variable '" + name.Lexeme + "'.");
     }
 }
