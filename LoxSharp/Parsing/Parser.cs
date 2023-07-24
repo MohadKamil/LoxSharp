@@ -18,22 +18,9 @@ public class Parser
     internal IEnumerable<Statement> Parse()
     {
         var statements = new List<Statement>();
-        try
+        while (!IsAtEnd())
         {
-            while (!IsAtEnd())
-            {
-                statements.Add(Declaration());
-            }
-
-            return statements;
-        }
-        catch (ParseError)
-        {
-            
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
+            statements.Add(Declaration());
         }
 
         return statements;
