@@ -9,7 +9,7 @@ public record VarExpression(Token Name) : Expression
 {
     public override TR Accept<TR>(IVisitor<TR> visitor)
     {
-        throw new NotImplementedException();
+        return visitor.VisitVarExpression(this);
     }
 }
 

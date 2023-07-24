@@ -11,6 +11,6 @@ public record VarStatement(Token Identifier, Expression? Initializer) : Statemen
 {
     public override void Accept(IStatementVisitor visitor)
     {
-        throw new NotImplementedException();
+        visitor.VisitVarStatement(this);
     }
 }
