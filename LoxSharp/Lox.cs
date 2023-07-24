@@ -50,7 +50,7 @@ public class Lox
 
         var parser = new Parser(tokens.ToList());
 
-        var statements = parser.ParseStatements().ToList();
+        var statements = parser.Parse().ToList();
 
         if (_hadSyntaxError) return;
         

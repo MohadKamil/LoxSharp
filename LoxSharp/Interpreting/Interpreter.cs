@@ -155,6 +155,7 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
 
     public void VisitPrintStatement(PrintStatement statement)
     {
-        Console.WriteLine(ToLoxString(statement.Value));
+        var value = Evaluate(statement.Expression);
+        Console.WriteLine(ToLoxString(value));
     }
 }
