@@ -15,13 +15,25 @@ public class Parser
     }
     
 
-    internal IEnumerable<Statement> ParseStatements()
+    internal IEnumerable<Statement> Parse()
     {
         var statements = new List<Statement>();
-
-        while (!IsAtEnd())
+        try
         {
-            statements.Add(Statement());
+            while (!IsAtEnd())
+            {
+                statements.Add(Statement());
+            }
+
+            return statements;
+        }
+        catch (ParseError)
+        {
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
 
         return statements;
@@ -38,9 +50,9 @@ public class Parser
 
         PrintStatement PrintStatement()
         {
-            var value = Expression();
+            var expression = Expression();
             Consume(SEMICOLON, "Expect ';' after value.");
-            return new PrintStatement(value);
+            return new PrintStatement(expression);
         }
         
         Statement ExpressionStatement() {
