@@ -116,6 +116,13 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         return LoxEnvironment.Get(expression.Name);
     }
 
+    public object VisitAssignExpression(AssignExpression expression)
+    {
+        var value = Evaluate(expression.Value);
+        LoxEnvironment.Assign(expression.Name, value);
+        return value;
+    }
+
     private static bool IsTruthy(object? @object)
     {
         return @object switch

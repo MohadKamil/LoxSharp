@@ -35,6 +35,11 @@ public class ASTPrinter: IVisitor<string>
         return expression.Name.Lexeme;
     }
 
+    public string VisitAssignExpression(AssignExpression expression)
+    {
+        throw new NotImplementedException();
+    }
+
     private string Parenthesize(string name, params Expression[] expressions) {
         var builder = new StringBuilder();
 

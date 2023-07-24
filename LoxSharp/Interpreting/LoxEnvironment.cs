@@ -17,4 +17,14 @@ public class LoxEnvironment
         }
         return values[name.Lexeme];
     }
+
+    public void Assign(Token name, object value)
+    {
+        if (!values.ContainsKey(name.Lexeme))
+        {
+            throw new RuntimeException(name, "Undefined variable '" + name.Lexeme + "'.");
+        }
+
+        values[name.Lexeme] = value;
+    }
 }
