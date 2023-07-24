@@ -7,6 +7,7 @@ namespace LoxSharp.Interpreting;
 
 public class Interpreter : IVisitor<object>, IStatementVisitor
 {
+    private readonly LoxEnvironment LoxEnvironment = new LoxEnvironment();
 
     internal void Interpret(IEnumerable<Statement> statements)
     {
@@ -157,5 +158,15 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
     {
         var value = Evaluate(statement.Expression);
         Console.WriteLine(ToLoxString(value));
+    }
+
+    public void VisitVarStatement(VarStatement statement)
+    {
+        object? value = null;
+        if (statement.Initializer != null) {
+            value = Evaluate(statement.Initializer);
+        }
+
+        LoxEnvironment.Define(statement.Identifier.Lexeme, value);
     }
 }
