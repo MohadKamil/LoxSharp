@@ -79,7 +79,11 @@ public class Parser
 
     private Statement Statement()
     {
-        return Match(PRINT) ? PrintStatement() : ExpressionStatement();
+        if (Match(PRINT))
+            return PrintStatement();
+        if (Match(LEFT_BRACE))
+            return new BlockStatement(Block());
+        return ExpressionStatement();
 
         PrintStatement PrintStatement()
         {
@@ -93,6 +97,17 @@ public class Parser
             Consume(SEMICOLON, "Expect ';' after expression.");
             return new ExpressionStatement(expr);
         }
+    }
+    
+    private IEnumerable<Statement> Block() {
+        var statements = new List<Statement>();
+
+        while (!Check(RIGHT_BRACE) && !IsAtEnd()) {
+            statements.Add(Declaration());
+        }
+
+        Consume(RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
     }
     
     
