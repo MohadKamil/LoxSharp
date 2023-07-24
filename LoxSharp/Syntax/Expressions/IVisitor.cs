@@ -6,4 +6,5 @@ public interface IVisitor<out TR>
     TR VisitGroupingExpression(Grouping expression);
     TR VisitLiteralExpression(Literal expression);
     TR VisitUnaryExpression(Unary expression);
+    TR VisitVarExpression(VarExpression expression);
 }

@@ -110,7 +110,12 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
 
         return right;
     }
-    
+
+    public object VisitVarExpression(VarExpression expression)
+    {
+        return LoxEnvironment.Get(expression.Name);
+    }
+
     private static bool IsTruthy(object? @object)
     {
         return @object switch

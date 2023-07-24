@@ -171,7 +171,7 @@ public class Parser
 
         if (Match(IDENTIFIER))
         {
-            return new VariableExpression(Previous());
+            return new VarExpression(Previous());
         }
         if (Match(LEFT_PAREN))
         {

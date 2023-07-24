@@ -29,7 +29,12 @@ public class ASTPrinter: IVisitor<string>
     {
         return Parenthesize(expression.Operator.Lexeme, expression.Right);
     }
-    
+
+    public string VisitVarExpression(VarExpression expression)
+    {
+        return expression.Name.Lexeme;
+    }
+
     private string Parenthesize(string name, params Expression[] expressions) {
         var builder = new StringBuilder();
 
