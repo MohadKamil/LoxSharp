@@ -22,7 +22,7 @@ public class Parser
         {
             while (!IsAtEnd())
             {
-                statements.Add(Statement());
+                statements.Add(Declaration());
             }
 
             return statements;
@@ -43,6 +43,33 @@ public class Parser
         return Equality();
     }
 
+    private Statement? Declaration()
+    {
+        try
+        {
+            return Match(VAR) 
+                ? VarDeclaration() 
+                : Statement();
+        }
+        catch (ParseError)
+        {
+            Synchronize();
+            return null;
+        }
+    }
+
+    private Statement VarDeclaration()
+    {
+        var name = Consume(IDENTIFIER, "Expect variable name.");
+
+        Expression? initializer = null;
+        if (Match(EQUAL)) {
+            initializer = Expression();
+        }
+
+        Consume(SEMICOLON, "Expect ';' after variable declaration.");
+        return new VarStatement(name, initializer);
+    }
 
     private Statement Statement()
     {
@@ -142,6 +169,10 @@ public class Parser
             return new Literal(Previous().Literal);
         }
 
+        if (Match(IDENTIFIER))
+        {
+            return new VariableExpression(Previous());
+        }
         if (Match(LEFT_PAREN))
         {
             var expr = Expression();

@@ -5,6 +5,14 @@ public abstract record Expression
     public abstract TR Accept<TR>(IVisitor<TR> visitor);
 };
 
+public record VariableExpression(Token Name) : Expression
+{
+    public override TR Accept<TR>(IVisitor<TR> visitor)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public record BinaryExpression(Expression Left, Token Operand, Expression Right) : Expression
 {
     public override TR Accept<TR>(IVisitor<TR> visitor)
