@@ -7,7 +7,7 @@ namespace LoxSharp.Interpreting;
 
 public class Interpreter : IVisitor<object>, IStatementVisitor
 {
-    private readonly LoxEnvironment LoxEnvironment = new LoxEnvironment();
+    private LoxEnvironment loxEnvironment = new LoxEnvironment();
 
     internal void Interpret(IEnumerable<Statement> statements)
     {
@@ -113,13 +113,13 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
 
     public object VisitVarExpression(VarExpression expression)
     {
-        return LoxEnvironment.Get(expression.Name);
+        return loxEnvironment.Get(expression.Name);
     }
 
     public object VisitAssignExpression(AssignExpression expression)
     {
         var value = Evaluate(expression.Value);
-        LoxEnvironment.Assign(expression.Name, value);
+        loxEnvironment.Assign(expression.Name, value);
         return value;
     }
 
@@ -179,6 +179,29 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
             value = Evaluate(statement.Initializer);
         }
 
-        LoxEnvironment.Define(statement.Identifier.Lexeme, value);
+        loxEnvironment.Define(statement.Identifier.Lexeme, value);
+    }
+
+    public void VisitBlockStatement(BlockStatement statement)
+    {
+        ExecuteBlock(statement.Statements, new LoxEnvironment(loxEnvironment));
+    }
+
+    private void ExecuteBlock(IEnumerable<Statement> statements, LoxEnvironment environment)
+    {
+        var previous = loxEnvironment;
+        try
+        {
+            loxEnvironment = environment;
+
+            foreach (var statement in statements)
+            {
+                Execute(statement);
+            }
+        }
+        finally
+        {
+            loxEnvironment = previous;
+        }
     }
 }

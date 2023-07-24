@@ -11,7 +11,7 @@ public record BlockStatement(IEnumerable<Statement> Statements) : Statement
 {
     public override void Accept(IStatementVisitor visitor)
     {
-        throw new NotImplementedException();
+        visitor.VisitBlockStatement(this);
     }
 }
 
