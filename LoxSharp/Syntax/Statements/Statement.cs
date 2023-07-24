@@ -1,6 +1,6 @@
 ﻿namespace LoxSharp.Syntax.Statements;
 
-internal abstract class Statement
+public abstract record Statement
 {
-    
+    public abstract void Accept(IStatementVisitor visitor);
 }

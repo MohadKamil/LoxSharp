@@ -1,23 +1,33 @@
 ﻿using System.Globalization;
 using LoxSharp.Expressions;
+using LoxSharp.Syntax.Statements;
 using static LoxSharp.TokenType;
 
 namespace LoxSharp.Interpreting;
 
-public class Interpreter : IVisitor<object>
+public class Interpreter : IVisitor<object>, IStatementVisitor
 {
-    internal void Interpret(Expression expression)
+
+    internal void Interpret(IEnumerable<Statement> statements)
     {
         try
         {
-            var value = Evaluate(expression);
-            Console.WriteLine(ToLoxString(value));
+            foreach (var statement in statements)
+            {
+                Execute(statement);
+            }
         }
         catch (RuntimeException exception)
         {
             Lox.RuntimeError(exception);
         }
     }
+
+    private void Execute(Statement statement)
+    {
+        statement.Accept(this);
+    }
+    
     
     public object VisitBinaryExpression(BinaryExpression expression)
     {
@@ -136,5 +146,15 @@ public class Interpreter : IVisitor<object>
             default:
                 return @object.ToString();
         }
+    }
+
+    public void VisitExpressionStatement(ExpressionStatement statement)
+    {
+        var result = Evaluate(statement.Expression);
+    }
+
+    public void VisitPrintStatement(PrintStatement statement)
+    {
+        Console.WriteLine(ToLoxString(statement.Value));
     }
 }

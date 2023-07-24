@@ -1,4 +1,5 @@
 ﻿using LoxSharp.Expressions;
+using LoxSharp.Syntax.Statements;
 using static LoxSharp.TokenType;
 
 namespace LoxSharp.Parsing;
@@ -12,23 +13,44 @@ public class Parser
     {
         this.tokens = tokens;
     }
+    
 
-    public Expression? Parse()
+    internal IEnumerable<Statement> ParseStatements()
     {
-        try
+        var statements = new List<Statement>();
+
+        while (!IsAtEnd())
         {
-            return Expression();
+            statements.Add(Statement());
         }
-        catch (ParseError error)
-        {
-            return null;
-        }
+
+        return statements;
     }
     private Expression Expression()
     {
         return Equality();
     }
 
+
+    private Statement Statement()
+    {
+        return Match(PRINT) ? PrintStatement() : ExpressionStatement();
+
+        PrintStatement PrintStatement()
+        {
+            var value = Expression();
+            Consume(SEMICOLON, "Expect ';' after value.");
+            return new PrintStatement(value);
+        }
+        
+        Statement ExpressionStatement() {
+            var expr = Expression();
+            Consume(SEMICOLON, "Expect ';' after expression.");
+            return new ExpressionStatement(expr);
+        }
+    }
+    
+    
     private Expression Equality()
     {
         var expr = Comparison();

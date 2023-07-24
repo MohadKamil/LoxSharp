@@ -6,7 +6,7 @@ namespace LoxSharp;
 
 public class Lox
 {
-    private static bool _hadError;
+    private static bool _hadSyntaxError;
     private static bool hadRuntimeError;
     private static readonly Interpreter interpreter = new Interpreter();
 
@@ -15,7 +15,7 @@ public class Lox
         var code = File.ReadAllText(filePath);
         ExecuteLoxCode(code);
         
-        if(_hadError) 
+        if(_hadSyntaxError) 
             Environment.Exit(65);
         if (hadRuntimeError) 
             Environment.Exit(70);
@@ -36,7 +36,7 @@ public class Lox
                     return;
                 default:
                     ExecuteLoxCode(input);
-                    _hadError = false;
+                    _hadSyntaxError = false;
                     break;
             }
         }
@@ -50,11 +50,11 @@ public class Lox
 
         var parser = new Parser(tokens.ToList());
 
-        var expression = parser.Parse();
+        var statements = parser.ParseStatements().ToList();
 
-        if (expression == null) return;
+        if (_hadSyntaxError) return;
         
-        interpreter.Interpret(expression);
+        interpreter.Interpret(statements);
     }
     
     internal static void RuntimeError(RuntimeException exception) {
@@ -77,7 +77,7 @@ public class Lox
 
     private static void Report(int line, string where, string message) {
         Console.Error.WriteLine("[line " + line + "] Error" + where + ": " + message);
-        _hadError = true;
+        _hadSyntaxError = true;
     }
     
 }

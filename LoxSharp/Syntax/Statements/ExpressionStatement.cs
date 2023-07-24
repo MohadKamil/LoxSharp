@@ -1,5 +1,11 @@
-﻿namespace LoxSharp.Syntax.Statements;
+﻿using LoxSharp.Expressions;
 
-internal class ExpressionStatement : Statement
+namespace LoxSharp.Syntax.Statements;
+
+public record ExpressionStatement(Expression Expression) : Statement
 {
+    public override void Accept(IStatementVisitor visitor)
+    {
+        visitor.VisitExpressionStatement(this);
+    }
 }
