@@ -7,7 +7,7 @@ public abstract record Statement
     public abstract void Accept(IStatementVisitor visitor);
 }
 
-public record IfStatement(Expression Condition, Statement ThenBranch,Statement ElseBranch) : Statement
+public record IfStatement(Expression Condition, Statement ThenBranch,Statement? ElseBranch) : Statement
 {
     public override void Accept(IStatementVisitor visitor)
     {

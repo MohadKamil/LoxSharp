@@ -83,6 +83,8 @@ public class Parser
             return PrintStatement();
         if (Match(LEFT_BRACE))
             return new BlockStatement(Block());
+        if (Match(IF))
+            return IfStatement();
         return ExpressionStatement();
 
         PrintStatement PrintStatement()
@@ -97,6 +99,21 @@ public class Parser
             Consume(SEMICOLON, "Expect ';' after expression.");
             return new ExpressionStatement(expr);
         }
+    }
+
+    private Statement IfStatement()
+    {
+        Consume(LEFT_PAREN, "Expect '(' after 'if'.");
+        var condition = Expression();
+        Consume(RIGHT_PAREN, "Expect ')' after if condition."); 
+
+        var thenBranch = Statement();
+        Statement? elseBranch = null;
+        if (Match(ELSE)) {
+            elseBranch = Statement();
+        }
+
+        return new IfStatement(condition, thenBranch, elseBranch);
     }
     
     private IEnumerable<Statement> Block() {
