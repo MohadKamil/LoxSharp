@@ -17,7 +17,7 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         Global.Define("clock", new Clock());
     }
 
-    internal void Interpret(IEnumerable<Statement> statements)
+    public void Interpret(IEnumerable<Statement> statements)
     {
         try
         {

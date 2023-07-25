@@ -1,6 +1,6 @@
 ﻿namespace LoxSharp.Interpreting.Exceptions;
 
-internal class RuntimeException : Exception
+public class RuntimeException : Exception
 {
     public Token Token { get; }
 

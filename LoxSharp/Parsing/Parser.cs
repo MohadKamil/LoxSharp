@@ -13,9 +13,9 @@ public class Parser
     {
         this.tokens = tokens;
     }
-    
 
-    internal IEnumerable<Statement> Parse()
+
+    public IEnumerable<Statement> Parse()
     {
         var statements = new List<Statement>();
         while (!IsAtEnd())

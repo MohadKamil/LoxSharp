@@ -11,6 +11,8 @@ public class Lox
     private static bool hadRuntimeError;
     private static readonly Interpreter interpreter = new Interpreter();
 
+    public static RuntimeException? CaughtRuntimeException;
+
     internal static void RunFile(string filePath)
     {
         var code = File.ReadAllText(filePath);
@@ -43,7 +45,7 @@ public class Lox
         }
     }
 
-    private static void ExecuteLoxCode(string code)
+    public static void ExecuteLoxCode(string code)
     {
         var scanner = new Scanner(code);
 
@@ -61,6 +63,7 @@ public class Lox
     internal static void RuntimeError(RuntimeException exception) {
         
         Console.WriteLine(exception.Message + Environment.NewLine + $"[Line {exception.Token.Line}]");
+        CaughtRuntimeException = exception;
         hadRuntimeError = true;
     }
 
