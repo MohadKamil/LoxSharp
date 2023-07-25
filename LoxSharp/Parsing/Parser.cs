@@ -104,6 +104,8 @@ public class Parser
 
     private Statement Statement()
     {
+        if (Match(FUN))
+            return Function("function");
         if (Match(PRINT))
             return PrintStatement();
         if (Match(LEFT_BRACE))
@@ -122,6 +124,31 @@ public class Parser
             Consume(SEMICOLON, "Expect ';' after value.");
             return new PrintStatement(expression);
         }
+    }
+
+    private Statement Function(string kind)
+    {
+        var name = Consume(IDENTIFIER, "Expect " + kind + " name.");
+        Consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
+        var parameters = new List<Token>();
+        if (!Check(RIGHT_PAREN))
+        {
+            do
+            {
+                if (parameters.Count >= 255)
+                {
+                    Error(Peek(), "Can't have more than 255 parameters.");
+                }
+
+                parameters.Add(
+                    Consume(IDENTIFIER, "Expect parameter name."));
+            } while (Match(COMMA));
+        }
+
+        Consume(RIGHT_PAREN, "Expect ')' after parameters.");
+        Consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
+        var body = Block();
+        return new FunctionStatement(name, parameters, body);
     }
 
     private Statement ExpressionStatement()
