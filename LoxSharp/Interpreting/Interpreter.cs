@@ -187,6 +187,18 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         ExecuteBlock(statement.Statements, new LoxEnvironment(loxEnvironment));
     }
 
+    public void VisitIfStatement(IfStatement statement)
+    {
+        if (IsTruthy(statement.Condition))
+        {
+            Execute(statement.ThenBranch);
+        }
+        else if(statement.ElseBranch != null)
+        {
+            Execute(statement.ElseBranch);
+        }
+    }
+
     private void ExecuteBlock(IEnumerable<Statement> statements, LoxEnvironment environment)
     {
         var previous = loxEnvironment;
