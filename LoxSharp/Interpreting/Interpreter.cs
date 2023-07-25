@@ -143,13 +143,18 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
     {
         var callee = Evaluate(callExpression.Callee);
 
-        var arguments = callExpression.Arguments.Select(Evaluate);
+        var arguments = callExpression.Arguments.Select(Evaluate).ToList();
 
         if (callee is not ICallable callable)
         {
             throw new RuntimeException(callExpression.Paren, "Can only call functions and classes.");
         }
 
+        if (arguments.Count != callable.Arity()) {
+            throw new RuntimeException(callExpression.Paren, "Expected " +
+                                                             callable.Arity() + " arguments but got " +
+                                                             arguments.Count + ".");
+        }
         return callable.Call(this, arguments);
     }
 
