@@ -11,7 +11,7 @@ public record FunctionStatement(Token Name,IEnumerable<Token> Params,IEnumerable
 {
     public override void Accept(IStatementVisitor visitor)
     {
-        throw new NotImplementedException();
+        visitor.VisitFunctionStatement(this);
     }
 }
 
