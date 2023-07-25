@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using LoxSharp.Expressions;
+using LoxSharp.Interpreting.Exceptions;
 using LoxSharp.Interpreting.NativeFunctions;
 using LoxSharp.Syntax.Statements;
 using static LoxSharp.TokenType;
@@ -253,6 +254,14 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
     {
         var callable = new LoxFunction(functionStatement);
         Global.Define(functionStatement.Name.Lexeme,callable);
+    }
+
+    public void VisitReturnStatement(ReturnStatement returnStatement)
+    {
+        object? value = null;
+        if (returnStatement.Value != null) value = Evaluate(returnStatement.Value);
+
+        throw new Return(value);
     }
 
     internal void ExecuteBlock(IEnumerable<Statement> statements, LoxEnvironment environment)
