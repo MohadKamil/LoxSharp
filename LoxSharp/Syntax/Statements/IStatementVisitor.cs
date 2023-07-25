@@ -9,4 +9,5 @@ public interface IStatementVisitor
     void VisitIfStatement(IfStatement statement);
     void VisitWhileStatement(WhileStatement whileStatement);
     void VisitFunctionStatement(FunctionStatement functionStatement);
+    void VisitReturnStatement(ReturnStatement returnStatement);
 }
