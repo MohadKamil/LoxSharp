@@ -112,6 +112,8 @@ public class Parser
             return IfStatement();
         if (Match(WHILE))
             return WhileStatement();
+        if (Match(FOR))
+            return ForStatement();
         return ExpressionStatement();
 
         PrintStatement PrintStatement()
@@ -120,12 +122,62 @@ public class Parser
             Consume(SEMICOLON, "Expect ';' after value.");
             return new PrintStatement(expression);
         }
+    }
+
+    private Statement ExpressionStatement()
+    {
+        var expr = Expression();
+        Consume(SEMICOLON, "Expect ';' after expression.");
+        return new ExpressionStatement(expr);
+    }
+
+    private Statement ForStatement()
+    {
+        Consume(LEFT_PAREN, "Expect '(' after 'for'.");
         
-        Statement ExpressionStatement() {
-            var expr = Expression();
-            Consume(SEMICOLON, "Expect ';' after expression.");
-            return new ExpressionStatement(expr);
+        Statement? initializer = null;
+        if (Match(SEMICOLON))
+        {
+            initializer = null;
         }
+        else if (Match(VAR))
+        {
+            initializer = VarDeclaration();
+        }
+        else
+        {
+            initializer = ExpressionStatement();
+        }
+        
+        Expression? condition = null;
+        if (!Check(SEMICOLON)) {
+            condition = Expression();
+        }
+        Consume(SEMICOLON, "Expect ';' after loop condition.");
+        
+        Expression? increment = null;
+        if (!Check(RIGHT_PAREN)) {
+            increment = Expression();
+        }
+        Consume(RIGHT_PAREN, "Expect ')' after for clauses.");
+
+        var body = Statement();
+
+        if (increment is not null)
+        {
+            body = new BlockStatement(new[] { body, new ExpressionStatement(increment) });
+        }
+
+        condition ??= new Literal(true);
+
+        body = new WhileStatement(condition, body);
+
+        if (initializer is not null)
+        {
+            body = new BlockStatement(new[] { initializer, body });
+        }
+
+        return body;
     }
 
     private Statement WhileStatement()
