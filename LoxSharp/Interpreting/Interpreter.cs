@@ -8,7 +8,7 @@ namespace LoxSharp.Interpreting;
 
 public class Interpreter : IVisitor<object>, IStatementVisitor
 {
-    private static readonly LoxEnvironment Global = new LoxEnvironment();
+    internal static readonly LoxEnvironment Global = new LoxEnvironment();
     private LoxEnvironment loxEnvironment = Global;
 
     public Interpreter()
@@ -249,7 +249,7 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         }
     }
 
-    private void ExecuteBlock(IEnumerable<Statement> statements, LoxEnvironment environment)
+    internal void ExecuteBlock(IEnumerable<Statement> statements, LoxEnvironment environment)
     {
         var previous = loxEnvironment;
         try
