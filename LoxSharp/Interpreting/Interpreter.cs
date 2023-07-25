@@ -215,6 +215,14 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         }
     }
 
+    public void VisitWhileStatement(WhileStatement whileStatement)
+    {
+        while (IsTruthy(whileStatement.Condition))
+        {
+            Execute(whileStatement.Body);
+        }
+    }
+
     private void ExecuteBlock(IEnumerable<Statement> statements, LoxEnvironment environment)
     {
         var previous = loxEnvironment;
