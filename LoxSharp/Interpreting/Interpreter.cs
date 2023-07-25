@@ -261,7 +261,7 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         object? value = null;
         if (returnStatement.Value != null) value = Evaluate(returnStatement.Value);
 
-        throw new Return(value);
+        throw new ReturnException(value);
     }
 
     internal void ExecuteBlock(IEnumerable<Statement> statements, LoxEnvironment environment)

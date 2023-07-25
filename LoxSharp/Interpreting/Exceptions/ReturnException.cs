@@ -1,10 +1,10 @@
 ﻿namespace LoxSharp.Interpreting.Exceptions;
 
-public class Return : Exception
+public class ReturnException : Exception
 {
     public object? Value { get; }
 
-    public Return(object? value)
+    public ReturnException(object? value)
     {
         Value = value;
     }

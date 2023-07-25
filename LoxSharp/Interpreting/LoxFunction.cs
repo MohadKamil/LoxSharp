@@ -26,7 +26,7 @@ public class LoxFunction : ICallable
         {
             interpreter.ExecuteBlock(statement.Body, functionEnvironment);
         }
-        catch (Return returnException)
+        catch (ReturnException returnException)
         {
             return returnException.Value;
         }
