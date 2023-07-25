@@ -110,6 +110,8 @@ public class Parser
             return new BlockStatement(Block());
         if (Match(IF))
             return IfStatement();
+        if (Match(WHILE))
+            return WhileStatement();
         return ExpressionStatement();
 
         PrintStatement PrintStatement()
@@ -124,6 +126,16 @@ public class Parser
             Consume(SEMICOLON, "Expect ';' after expression.");
             return new ExpressionStatement(expr);
         }
+    }
+
+    private Statement WhileStatement()
+    {
+        Consume(LEFT_PAREN, "Expect '(' after 'while'.");
+        var condition = Expression();
+        Consume(RIGHT_PAREN, "Expect ')' after condition.");
+        var body = Statement();
+
+        return new WhileStatement(condition, body);
     }
 
     private Statement IfStatement()
