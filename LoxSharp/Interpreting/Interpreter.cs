@@ -249,6 +249,12 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         }
     }
 
+    public void VisitFunctionStatement(FunctionStatement functionStatement)
+    {
+        var callable = new LoxFunction(functionStatement);
+        Global.Define(functionStatement.Name.Lexeme,callable);
+    }
+
     internal void ExecuteBlock(IEnumerable<Statement> statements, LoxEnvironment environment)
     {
         var previous = loxEnvironment;

@@ -8,4 +8,5 @@ public interface IStatementVisitor
     void VisitBlockStatement(BlockStatement statement);
     void VisitIfStatement(IfStatement statement);
     void VisitWhileStatement(WhileStatement whileStatement);
+    void VisitFunctionStatement(FunctionStatement functionStatement);
 }
