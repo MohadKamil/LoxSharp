@@ -1,4 +1,5 @@
-﻿using LoxSharp.Syntax.Statements;
+﻿using LoxSharp.Interpreting.Exceptions;
+using LoxSharp.Syntax.Statements;
 
 namespace LoxSharp.Interpreting;
 
@@ -21,7 +22,14 @@ public class LoxFunction : ICallable
             functionEnvironment.Define(param.Lexeme,arg);
         }
         
-        interpreter.ExecuteBlock(statement.Body, functionEnvironment);
+        try
+        {
+            interpreter.ExecuteBlock(statement.Body, functionEnvironment);
+        }
+        catch (Return returnException)
+        {
+            return returnException.Value;
+        }
         return null;
     }
 
