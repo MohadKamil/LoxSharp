@@ -5,6 +5,14 @@ public abstract record Expression
     public abstract TR Accept<TR>(IVisitor<TR> visitor);
 };
 
+public record CallExpression(Expression Callee, Token Paren, IEnumerable<Expression> Arguments) : Expression
+{
+    public override TR Accept<TR>(IVisitor<TR> visitor)
+    {
+        return visitor.VisitCallExpression(this);
+    }
+}
+
 public record LogicalExpression(Expression Left, Token Token, Expression Right) : Expression
 {
     public override TR Accept<TR>(IVisitor<TR> visitor)
