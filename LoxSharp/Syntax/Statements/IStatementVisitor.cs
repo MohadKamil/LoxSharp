@@ -7,4 +7,5 @@ public interface IStatementVisitor
     void VisitVarStatement(VarStatement statement);
     void VisitBlockStatement(BlockStatement statement);
     void VisitIfStatement(IfStatement statement);
+    void VisitWhileStatement(WhileStatement whileStatement);
 }

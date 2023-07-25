@@ -7,6 +7,14 @@ public abstract record Statement
     public abstract void Accept(IStatementVisitor visitor);
 }
 
+public record WhileStatement(Expression Condition, Statement Body) : Statement
+{
+    public override void Accept(IStatementVisitor visitor)
+    {
+        visitor.VisitWhileStatement(this);
+    }
+}
+
 public record IfStatement(Expression Condition, Statement ThenBranch,Statement? ElseBranch) : Statement
 {
     public override void Accept(IStatementVisitor visitor)
