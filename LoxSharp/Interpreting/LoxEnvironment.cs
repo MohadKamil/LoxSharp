@@ -1,4 +1,6 @@
-﻿namespace LoxSharp.Interpreting;
+﻿using LoxSharp.Interpreting.Exceptions;
+
+namespace LoxSharp.Interpreting;
 
 public class LoxEnvironment
 {

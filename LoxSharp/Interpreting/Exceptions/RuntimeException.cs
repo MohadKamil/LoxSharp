@@ -1,4 +1,4 @@
-﻿namespace LoxSharp.Interpreting;
+﻿namespace LoxSharp.Interpreting.Exceptions;
 
 internal class RuntimeException : Exception
 {

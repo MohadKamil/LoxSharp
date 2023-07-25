@@ -1,5 +1,6 @@
 ﻿using LoxSharp.Expressions;
 using LoxSharp.Interpreting;
+using LoxSharp.Interpreting.Exceptions;
 using LoxSharp.Parsing;
 
 namespace LoxSharp;
