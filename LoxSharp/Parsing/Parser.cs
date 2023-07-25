@@ -116,6 +116,8 @@ public class Parser
             return WhileStatement();
         if (Match(FOR))
             return ForStatement();
+        if (Match(RETURN))
+            return ReturnStatement();
         return ExpressionStatement();
 
         PrintStatement PrintStatement()
@@ -124,6 +126,18 @@ public class Parser
             Consume(SEMICOLON, "Expect ';' after value.");
             return new PrintStatement(expression);
         }
+    }
+
+    private Statement ReturnStatement()
+    {
+        var keyword = Previous();
+        Expression? value = null;
+        if (!Check(SEMICOLON)) {
+            value = Expression();
+        }
+
+        Consume(SEMICOLON, "Expect ';' after return value.");
+        return new ReturnStatement(keyword, value);
     }
 
     private Statement Function(string kind)
