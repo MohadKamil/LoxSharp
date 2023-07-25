@@ -139,6 +139,20 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         return Evaluate(logicalExpression.Right);
     }
 
+    public object VisitCallExpression(CallExpression callExpression)
+    {
+        var callee = Evaluate(callExpression.Callee);
+
+        var arguments = callExpression.Arguments.Select(Evaluate);
+
+        if (callee is not ICallable callable)
+        {
+            throw new RuntimeException(callExpression.Paren, "Can only call functions and classes.");
+        }
+
+        return callable.Call(this, arguments);
+    }
+
     private static bool IsTruthy(object? @object)
     {
         return @object switch
