@@ -252,7 +252,7 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
 
     public void VisitFunctionStatement(FunctionStatement functionStatement)
     {
-        var callable = new LoxFunction(functionStatement);
+        var callable = new LoxFunction(functionStatement,loxEnvironment);
         Global.Define(functionStatement.Name.Lexeme,callable);
     }
 

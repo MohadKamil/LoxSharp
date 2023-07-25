@@ -6,14 +6,16 @@ namespace LoxSharp.Interpreting;
 public class LoxFunction : ICallable
 {
     private readonly FunctionStatement statement;
+    private readonly LoxEnvironment closure;
 
-    public LoxFunction(FunctionStatement statement)
+    public LoxFunction(FunctionStatement statement, LoxEnvironment closure)
     {
         this.statement = statement;
+        this.closure = closure;
     }
     public object? Call(Interpreter interpreter, IEnumerable<object> arguments)
     {
-        var functionEnvironment = new LoxEnvironment(Interpreter.Global);
+        var functionEnvironment = new LoxEnvironment(closure);
 
         var argparams = arguments.Zip(statement.Params);
 
