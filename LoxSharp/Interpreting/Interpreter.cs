@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using LoxSharp.Expressions;
+using LoxSharp.Interpreting.NativeFunctions;
 using LoxSharp.Syntax.Statements;
 using static LoxSharp.TokenType;
 
@@ -7,7 +8,13 @@ namespace LoxSharp.Interpreting;
 
 public class Interpreter : IVisitor<object>, IStatementVisitor
 {
-    private LoxEnvironment loxEnvironment = new LoxEnvironment();
+    private static readonly LoxEnvironment Global = new LoxEnvironment();
+    private LoxEnvironment loxEnvironment = Global;
+
+    public Interpreter()
+    {
+        Global.Define("clock", new Clock());
+    }
 
     internal void Interpret(IEnumerable<Statement> statements)
     {
