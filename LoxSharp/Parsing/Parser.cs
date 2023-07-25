@@ -32,13 +32,13 @@ public class Parser
 
     private Expression Assignment()
     {
-        var eq = Equality();
+        var expression = Or();
         if (Match(EQUAL))
         {
             var token = Previous();
             var value = Assignment();
 
-            if (eq is VarExpression varExpression)
+            if (expression is VarExpression varExpression)
             {
                 return new AssignExpression(varExpression.Name, value);
             }
@@ -46,7 +46,32 @@ public class Parser
             Error(token, "Invalid assignment target");
         }
 
-        return eq;
+        return expression;
+    }
+
+    private Expression Or()
+    {
+        var expression = And();
+
+        while (Match(OR)) {
+            var @operator = Previous();
+            var right = And();
+            expression = new LogicalExpression(expression, @operator, right);
+        }
+
+        return expression;
+    }
+    
+    private Expression And() {
+        var expression = Equality();
+
+        while (Match(AND)) {
+            var @operator = Previous();
+            var right = Equality();
+            expression = new LogicalExpression(expression, @operator, right);
+        }
+
+        return expression;
     }
 
     private Statement? Declaration()
