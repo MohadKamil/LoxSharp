@@ -123,6 +123,22 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         return value;
     }
 
+    public object VisitLogicalExpression(LogicalExpression logicalExpression)
+    {
+        var left = Evaluate(logicalExpression.Left);
+
+        if (logicalExpression.Token.TokenType == OR)
+        {
+            if (IsTruthy(left)) return left;
+        }
+        else
+        {
+            if (!IsTruthy(left)) return left;
+        }
+
+        return Evaluate(logicalExpression.Right);
+    }
+
     private static bool IsTruthy(object? @object)
     {
         return @object switch
