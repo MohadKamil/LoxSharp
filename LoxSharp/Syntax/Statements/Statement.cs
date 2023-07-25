@@ -7,6 +7,14 @@ public abstract record Statement
     public abstract void Accept(IStatementVisitor visitor);
 }
 
+public record FunctionStatement(Token Name,IEnumerable<Token> Params,IEnumerable<Statement> Body) : Statement
+{
+    public override void Accept(IStatementVisitor visitor)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public record WhileStatement(Expression Condition, Statement Body) : Statement
 {
     public override void Accept(IStatementVisitor visitor)
