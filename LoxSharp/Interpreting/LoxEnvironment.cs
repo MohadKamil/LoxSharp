@@ -51,4 +51,23 @@ public class LoxEnvironment
         }
         throw new RuntimeException(name, "Undefined variable '" + name.Lexeme + "'.");
     }
+
+    public object? GetAt(int depth, string lexeme)
+    {
+        return Ancestor(depth)?.values[lexeme];
+    }
+
+    private LoxEnvironment? Ancestor(int distance) {
+        var environment = this;
+        for (var i = 0; i < distance; i++) {
+            environment = environment?.parentLoxEnvironment; 
+        }
+
+        return environment;
+    }
+
+    public void AssignAt(int depth, Token name, object value)
+    {
+        Ancestor(depth).values[name.Lexeme] = value;
+    }
 }

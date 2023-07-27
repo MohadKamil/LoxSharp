@@ -11,6 +11,7 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
 {
     internal static readonly LoxEnvironment Global = new LoxEnvironment();
     private LoxEnvironment loxEnvironment = Global;
+    private readonly IDictionary<Expression, int> locals = new Dictionary<Expression, int>();
 
     public Interpreter()
     {
@@ -121,13 +122,31 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
 
     public object VisitVarExpression(VarExpression expression)
     {
-        return loxEnvironment.Get(expression.Name);
+        return LookupVariable(expression.Name, expression);
+    }
+
+    private object LookupVariable(Token name, Expression expression)
+    {
+        if (locals.TryGetValue(expression, out var depth))
+        {
+            return loxEnvironment.GetAt(depth, name.Lexeme);
+        }
+
+        return Global.Get(name);
     }
 
     public object VisitAssignExpression(AssignExpression expression)
     {
         var value = Evaluate(expression.Value);
-        loxEnvironment.Assign(expression.Name, value);
+        if (locals.TryGetValue(expression, out var depth))
+        {
+            loxEnvironment.AssignAt(depth,expression.Name,value);
+        }
+        else
+        {
+            Global.Assign(expression.Name,value);
+        }
+
         return value;
     }
 
@@ -280,5 +299,10 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         {
             loxEnvironment = previous;
         }
+    }
+
+    public void Resolve(Expression expression, int depth)
+    {
+        locals[expression] = depth;
     }
 }

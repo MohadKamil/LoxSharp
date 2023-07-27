@@ -57,6 +57,9 @@ public class Lox
 
         if (_hadSyntaxError) return;
         
+        var resolver = new Resolver(interpreter);
+        resolver.Resolve(statements.ToArray());
+        
         interpreter.Interpret(statements);
     }
     
