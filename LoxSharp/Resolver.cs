@@ -146,7 +146,7 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
 
     public object? VisitVarExpression(VarExpression expression)
     {
-        if (!scopes.Any())
+        if (scopes.Any())
         {
             scopes.Peek().TryGetValue(expression.Name.Lexeme, out var found);
             if (!found)
