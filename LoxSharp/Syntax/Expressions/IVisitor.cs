@@ -10,4 +10,5 @@ public interface IVisitor<out TR>
     TR VisitAssignExpression(AssignExpression expression);
     TR VisitLogicalExpression(LogicalExpression logicalExpression);
     TR VisitCallExpression(CallExpression callExpression);
+    TR VisitGetExpression(GetExpression getExpression);
 }

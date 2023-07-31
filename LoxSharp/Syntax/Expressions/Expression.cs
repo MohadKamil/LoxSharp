@@ -9,7 +9,7 @@ public record GetExpression(Expression Object,Token Name) : Expression
 {
     public override TR Accept<TR>(IVisitor<TR> visitor)
     {
-        throw new NotImplementedException();
+        return visitor.VisitGetExpression(this);
     }
 }
 
