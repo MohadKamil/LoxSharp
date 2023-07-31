@@ -12,6 +12,14 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         Class
     }
     private ClassType currentClass = ClassType.None;
+    enum FunctionType
+    {
+        None = 0,
+        Function,
+        Initializer,
+        Method
+    }
+    private FunctionType currentFunction = FunctionType.None;
     private readonly Stack<IDictionary<string, bool>> scopes = new();
     private readonly Interpreter interpreter;
 
@@ -107,7 +115,10 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         ResolveFunction(functionStatement,FunctionType.Function);
     }
     
-    private void ResolveFunction(FunctionStatement function, FunctionType functionType) {
+    private void ResolveFunction(FunctionStatement function, FunctionType functionType)
+    {
+        var enclosingFunction = currentFunction;
+        currentFunction = functionType;
         BeginScope();
         foreach (var param in function.Params)
         {
@@ -116,12 +127,17 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         }
         Resolve(function.Body.ToArray());
         EndScope();
+        currentFunction = enclosingFunction;
     }
 
     public void VisitReturnStatement(ReturnStatement returnStatement)
     {
         if (returnStatement.Value != null)
         {
+            if (currentFunction == FunctionType.Initializer)
+            {
+                Lox.Error(returnStatement.ReturnKeyword,"Can't return a value from an initializer.");
+            }
             Resolve(returnStatement.Value);
         }
     }
@@ -137,7 +153,12 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
 
         foreach (var method in classStatement.Methods)
         {
-            ResolveFunction(method,FunctionType.Method);
+            var functionType = FunctionType.Method;
+            if (method.Name.Lexeme == "init")
+            {
+                functionType = FunctionType.Initializer;
+            }
+            ResolveFunction(method,functionType);
         }
         
         EndScope();
@@ -240,12 +261,5 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         }
         ResolveLocal(thisExpression,thisExpression.Keyword);
         return null;
-    }
-
-    enum FunctionType
-    {
-        None = 0,
-        Function,
-        Method
     }
 }

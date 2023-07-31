@@ -32,10 +32,15 @@ public class LoxFunction : ICallable
         }
         catch (ReturnException returnException)
         {
-            return returnException.Value;
+            return isInitializer ? GetThis() : returnException.Value;
         }
 
-        return isInitializer ? closure.GetAt(0, "this") : null;
+        return isInitializer ? GetThis() : null;
+
+        object? GetThis()
+        {
+            return closure.GetAt(0, "this");
+        }
     }
 
     public LoxFunction Bind(LoxInstance instance)
