@@ -124,11 +124,15 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
     {
         Declare(classStatement.Name);
         Define(classStatement.Name);
+        BeginScope();
+        scopes.Peek()["this"] = true;
 
         foreach (var method in classStatement.Methods)
         {
             ResolveFunction(method,FunctionType.Method);
         }
+        
+        EndScope();
     }
 
     public object? VisitBinaryExpression(BinaryExpression expression)
@@ -215,6 +219,12 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
     {
         Resolve(setExpression.Value);
         Resolve(setExpression.Object);
+        return null;
+    }
+
+    public object? VisitThisExpression(ThisExpression thisExpression)
+    {
+        ResolveLocal(thisExpression,thisExpression.Keyword);
         return null;
     }
 
