@@ -283,6 +283,13 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         throw new ReturnException(value);
     }
 
+    public void VisitClassStatement(ClassStatement classStatement)
+    {
+        loxEnvironment.Define(classStatement.Name.Lexeme, null);
+        LoxClass klass = new LoxClass(classStatement.Name.Lexeme);
+        loxEnvironment.Assign(classStatement.Name, klass);
+    }
+
     internal void ExecuteBlock(IEnumerable<Statement> statements, LoxEnvironment environment)
     {
         var previous = loxEnvironment;
