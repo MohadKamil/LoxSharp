@@ -24,6 +24,13 @@ public class LoxInstance
             return field;
         }
 
+        var method = loxClass.GetMethod(name);
+
+        if (method != null)
+        {
+            return method;
+        }
+
         throw new RuntimeException(name, "Undefined property '" + name.Lexeme + "'.");
     }
 

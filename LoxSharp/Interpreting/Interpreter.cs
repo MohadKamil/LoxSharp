@@ -314,7 +314,12 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
     public void VisitClassStatement(ClassStatement classStatement)
     {
         loxEnvironment.Define(classStatement.Name.Lexeme, null);
-        LoxClass klass = new LoxClass(classStatement.Name.Lexeme);
+        var loxFunctions = classStatement
+            .Methods
+            .Select(m => (m.Name.Lexeme,new LoxFunction(m, loxEnvironment)))
+            .ToDictionary(p => p.Lexeme,p => p.Item2);
+        var klass = new LoxClass(classStatement.Name.Lexeme,loxFunctions);
+        
         loxEnvironment.Assign(classStatement.Name, klass);
     }
 

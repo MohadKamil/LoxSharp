@@ -3,10 +3,12 @@
 public class LoxClass : ICallable
 {
     private readonly string name;
+    private readonly IDictionary<string, LoxFunction> methods;
 
-    public LoxClass(string name)
+    public LoxClass(string name, IDictionary<string, LoxFunction> methods)
     {
         this.name = name;
+        this.methods = methods;
     }
 
     public override string ToString()
@@ -21,4 +23,10 @@ public class LoxClass : ICallable
     }
 
     public int Arity() => 0;
+
+    public object? GetMethod(Token token)
+    {
+        return methods.TryGetValue(token.Lexeme, out var method) ? method : null;
+    }
+    
 }
