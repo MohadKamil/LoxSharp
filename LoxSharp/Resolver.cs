@@ -98,10 +98,10 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         Declare(functionStatement.Name);
         Define(functionStatement.Name);
 
-        ResolveFunction(functionStatement);
+        ResolveFunction(functionStatement,FunctionType.Function);
     }
     
-    private void ResolveFunction(FunctionStatement function) {
+    private void ResolveFunction(FunctionStatement function, FunctionType functionType) {
         BeginScope();
         foreach (var param in function.Params)
         {
@@ -124,6 +124,11 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
     {
         Declare(classStatement.Name);
         Define(classStatement.Name);
+
+        foreach (var method in classStatement.Methods)
+        {
+            ResolveFunction(method,FunctionType.Method);
+        }
     }
 
     public object? VisitBinaryExpression(BinaryExpression expression)
@@ -211,5 +216,12 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         Resolve(setExpression.Value);
         Resolve(setExpression.Object);
         return null;
+    }
+
+    enum FunctionType
+    {
+        None = 0,
+        Function,
+        Method
     }
 }
