@@ -38,12 +38,16 @@ public class Parser
             var token = Previous();
             var value = Assignment();
 
-            if (expression is VarExpression varExpression)
+            switch (expression)
             {
-                return new AssignExpression(varExpression.Name, value);
+                case VarExpression varExpression:
+                    return new AssignExpression(varExpression.Name, value);
+                case GetExpression getExpression:
+                    return new SetExpression(getExpression.Object, getExpression.Name, value);
+                default:
+                    Error(token, "Invalid assignment target");
+                    break;
             }
-
-            Error(token, "Invalid assignment target");
         }
 
         return expression;
