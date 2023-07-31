@@ -17,7 +17,7 @@ public class LoxInstance
         return $"{loxClass} Instance";
     }
 
-    public object Get(Token name)
+    private object Get(Token name)
     {
         if (fields.TryGetValue(name.Lexeme, out var field))
         {
@@ -30,9 +30,6 @@ public class LoxInstance
     public object this[Token key]
     {
         get => Get(key);
-        set
-        {
-            /* set the specified index to value here */
-        }
+        set => fields[key.Lexeme] = value;
     }
 }

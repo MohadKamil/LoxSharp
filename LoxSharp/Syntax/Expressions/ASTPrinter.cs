@@ -55,6 +55,11 @@ public class ASTPrinter: IVisitor<string>
         throw new NotImplementedException();
     }
 
+    public string VisitSetExpression(SetExpression setExpression)
+    {
+        throw new NotImplementedException();
+    }
+
     private string Parenthesize(string name, params Expression[] expressions) {
         var builder = new StringBuilder();
 

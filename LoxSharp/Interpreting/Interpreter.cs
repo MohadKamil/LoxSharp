@@ -198,6 +198,21 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
             "Only instances have properties.");
     }
 
+    public object VisitSetExpression(SetExpression setExpression)
+    {
+        var obj = Evaluate(setExpression.Object);
+
+        if (obj is not LoxInstance instance)
+        {
+            throw new RuntimeException(setExpression.Name, "Only instances have fields.");
+        }
+
+        var val = Evaluate(setExpression.Value);
+
+        instance[setExpression.Name] = val;
+        return val;
+    }
+
     private static bool IsTruthy(object? @object)
     {
         return @object switch
