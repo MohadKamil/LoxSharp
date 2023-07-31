@@ -118,6 +118,8 @@ public class Parser
             return ForStatement();
         if (Match(RETURN))
             return ReturnStatement();
+        if (Match(CLASS))
+            return ClassDeclaration();
         return ExpressionStatement();
 
         PrintStatement PrintStatement()
@@ -126,6 +128,21 @@ public class Parser
             Consume(SEMICOLON, "Expect ';' after value.");
             return new PrintStatement(expression);
         }
+    }
+
+    private Statement ClassDeclaration()
+    {
+        var name = Consume(IDENTIFIER, "Expect class name.");
+        Consume(LEFT_BRACE, "Expect '{' before class body.");
+
+        var methods = new List<FunctionStatement>();
+        while (!Check(RIGHT_BRACE) && !IsAtEnd()) {
+            methods.Add(Function("method"));
+        }
+
+        Consume(RIGHT_BRACE, "Expect '}' after class body.");
+
+        return new ClassStatement(name, methods);
     }
 
     private Statement ReturnStatement()
@@ -140,7 +157,7 @@ public class Parser
         return new ReturnStatement(keyword, value);
     }
 
-    private Statement Function(string kind)
+    private FunctionStatement Function(string kind)
     {
         var name = Consume(IDENTIFIER, "Expect " + kind + " name.");
         Consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
