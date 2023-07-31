@@ -24,7 +24,7 @@ public class LoxInstance
             return field;
         }
 
-        var method = loxClass.GetMethod(name);
+        var method = loxClass.GetMethod(name.Lexeme);
 
         if (method != null)
         {

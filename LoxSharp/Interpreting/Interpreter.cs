@@ -304,7 +304,7 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
 
     public void VisitFunctionStatement(FunctionStatement functionStatement)
     {
-        var callable = new LoxFunction(functionStatement,loxEnvironment);
+        var callable = new LoxFunction(functionStatement,loxEnvironment,false);
         Global.Define(functionStatement.Name.Lexeme,callable);
     }
 
@@ -319,9 +319,10 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
     public void VisitClassStatement(ClassStatement classStatement)
     {
         loxEnvironment.Define(classStatement.Name.Lexeme, null);
+        
         var loxFunctions = classStatement
             .Methods
-            .Select(m => (m.Name.Lexeme,new LoxFunction(m, loxEnvironment)))
+            .Select(m => (m.Name.Lexeme,new LoxFunction(m, loxEnvironment, m.Name.Lexeme == "init")))
             .ToDictionary(p => p.Lexeme,p => p.Item2);
         var klass = new LoxClass(classStatement.Name.Lexeme,loxFunctions);
         

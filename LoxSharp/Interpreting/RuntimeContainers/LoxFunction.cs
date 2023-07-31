@@ -7,11 +7,13 @@ public class LoxFunction : ICallable
 {
     private readonly FunctionStatement statement;
     private readonly LoxEnvironment closure;
+    private readonly bool isInitializer;
 
-    public LoxFunction(FunctionStatement statement, LoxEnvironment closure)
+    public LoxFunction(FunctionStatement statement, LoxEnvironment closure, bool isInitializer)
     {
         this.statement = statement;
         this.closure = closure;
+        this.isInitializer = isInitializer;
     }
     public object? Call(Interpreter interpreter, IEnumerable<object> arguments)
     {
@@ -32,14 +34,15 @@ public class LoxFunction : ICallable
         {
             return returnException.Value;
         }
-        return null;
+
+        return isInitializer ? closure.GetAt(0, "this") : null;
     }
 
     public LoxFunction Bind(LoxInstance instance)
     {
         var environment = new LoxEnvironment(closure);
         environment.Define("this", instance);
-        return new LoxFunction(statement, environment);
+        return new LoxFunction(statement, environment,isInitializer);
     }
     
     public int Arity()

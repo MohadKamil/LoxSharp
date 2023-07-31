@@ -19,14 +19,22 @@ public class LoxClass : ICallable
     public object Call(Interpreter interpreter, IEnumerable<object> arguments)
     {
         var instance = new LoxInstance(this);
+        // MK: design calls for returning the current object from init method, it's better if it's called constructor, just like in Kotlin (Secondary Constructors)
+        var init = GetMethod("init");
+
+        init?.Bind(instance).Call(interpreter, arguments);
         return instance;
     }
 
-    public int Arity() => 0;
-
-    public LoxFunction? GetMethod(Token token)
+    public int Arity()
     {
-        return methods.TryGetValue(token.Lexeme, out var method) ? method : null;
+        var init = GetMethod("init");
+        return init?.Arity() ?? 0;
+    }
+
+    public LoxFunction? GetMethod(string methodName)
+    {
+        return methods.TryGetValue(methodName, out var method) ? method : null;
     }
     
 }
