@@ -1,7 +1,7 @@
 ﻿using LoxSharp.Interpreting.Exceptions;
 using LoxSharp.Syntax.Statements;
 
-namespace LoxSharp.Interpreting;
+namespace LoxSharp.Interpreting.RuntimeContainers;
 
 public class LoxFunction : ICallable
 {

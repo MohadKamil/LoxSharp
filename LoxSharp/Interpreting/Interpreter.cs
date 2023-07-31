@@ -2,6 +2,7 @@
 using LoxSharp.Expressions;
 using LoxSharp.Interpreting.Exceptions;
 using LoxSharp.Interpreting.NativeFunctions;
+using LoxSharp.Interpreting.RuntimeContainers;
 using LoxSharp.Syntax.Statements;
 using static LoxSharp.TokenType;
 

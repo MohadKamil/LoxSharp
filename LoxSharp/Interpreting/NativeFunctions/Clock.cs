@@ -1,4 +1,6 @@
-﻿namespace LoxSharp.Interpreting.NativeFunctions;
+﻿using LoxSharp.Interpreting.RuntimeContainers;
+
+namespace LoxSharp.Interpreting.NativeFunctions;
 
 public class Clock : ICallable
 {

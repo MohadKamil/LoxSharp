@@ -1,4 +1,4 @@
-﻿namespace LoxSharp.Interpreting;
+﻿namespace LoxSharp.Interpreting.RuntimeContainers;
 
 public interface ICallable
 {
