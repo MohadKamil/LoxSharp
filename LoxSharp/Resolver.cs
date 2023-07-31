@@ -205,4 +205,11 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         Resolve(getExpression.Object);
         return null;
     }
+
+    public object? VisitSetExpression(SetExpression setExpression)
+    {
+        Resolve(setExpression.Value);
+        Resolve(setExpression.Object);
+        return null;
+    }
 }
