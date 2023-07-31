@@ -213,6 +213,11 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         return val;
     }
 
+    public object VisitThisExpression(ThisExpression thisExpression)
+    {
+        return LookupVariable(thisExpression.Keyword, thisExpression);
+    }
+
     private static bool IsTruthy(object? @object)
     {
         return @object switch

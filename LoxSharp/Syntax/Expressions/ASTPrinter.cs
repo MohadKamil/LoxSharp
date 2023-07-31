@@ -60,6 +60,11 @@ public class ASTPrinter: IVisitor<string>
         throw new NotImplementedException();
     }
 
+    public string VisitThisExpression(ThisExpression thisExpression)
+    {
+        throw new NotImplementedException();
+    }
+
     private string Parenthesize(string name, params Expression[] expressions) {
         var builder = new StringBuilder();
 

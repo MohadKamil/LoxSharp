@@ -35,8 +35,16 @@ public class LoxFunction : ICallable
         return null;
     }
 
+    public LoxFunction Bind(LoxInstance instance)
+    {
+        var environment = new LoxEnvironment(closure);
+        environment.Define("this", instance);
+        return new LoxFunction(statement, environment);
+    }
+    
     public int Arity()
     {
         return statement.Params.Count();
     }
+    
 }

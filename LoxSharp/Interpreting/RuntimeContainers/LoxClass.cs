@@ -24,7 +24,7 @@ public class LoxClass : ICallable
 
     public int Arity() => 0;
 
-    public object? GetMethod(Token token)
+    public LoxFunction? GetMethod(Token token)
     {
         return methods.TryGetValue(token.Lexeme, out var method) ? method : null;
     }
