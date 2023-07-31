@@ -11,7 +11,7 @@ public record ClassStatement(Token Name, IEnumerable<FunctionStatement> Methods)
 {
     public override void Accept(IStatementVisitor visitor)
     {
-        throw new NotImplementedException();
+        visitor.VisitClassStatement(this);
     }
 }
 
