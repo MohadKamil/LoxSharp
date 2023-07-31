@@ -186,6 +186,18 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         return callable.Call(this, arguments);
     }
 
+    public object VisitGetExpression(GetExpression getExpression)
+    {
+        var obj = Evaluate(getExpression.Object);
+        if (obj is LoxInstance loxInstance)
+        {
+            return loxInstance[getExpression.Name];
+        }
+
+        throw new RuntimeException(getExpression.Name,
+            "Only instances have properties.");
+    }
+
     private static bool IsTruthy(object? @object)
     {
         return @object switch
