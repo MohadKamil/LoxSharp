@@ -6,6 +6,12 @@ namespace LoxSharp;
 
 public class Resolver : IStatementVisitor, IVisitor<object?>
 {
+    enum ClassType
+    {
+        None = 0,
+        Class
+    }
+    private ClassType currentClass = ClassType.None;
     private readonly Stack<IDictionary<string, bool>> scopes = new();
     private readonly Interpreter interpreter;
 
@@ -122,6 +128,8 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
 
     public void VisitClassStatement(ClassStatement classStatement)
     {
+        var enclosingClass = currentClass;
+        currentClass = ClassType.Class;
         Declare(classStatement.Name);
         Define(classStatement.Name);
         BeginScope();
@@ -133,6 +141,7 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         }
         
         EndScope();
+        currentClass = enclosingClass;
     }
 
     public object? VisitBinaryExpression(BinaryExpression expression)
@@ -224,6 +233,11 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
 
     public object? VisitThisExpression(ThisExpression thisExpression)
     {
+        if (currentClass != ClassType.Class)
+        {
+            Lox.Error(thisExpression.Keyword,"Can't use 'this' outside of a class.");
+            return null;
+        }
         ResolveLocal(thisExpression,thisExpression.Keyword);
         return null;
     }
