@@ -353,6 +353,11 @@ public class Parser
             {
                 expression = FinishCall(expression);
             }
+            else if(Match(DOT))
+            {
+                var token = Consume(IDENTIFIER, "Expected property name after '.' .");
+                expression = new GetExpression(expression, token);
+            }
             else
             {
                 break;
