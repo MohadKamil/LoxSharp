@@ -120,6 +120,12 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         }
     }
 
+    public void VisitClassStatement(ClassStatement classStatement)
+    {
+        Declare(classStatement.Name);
+        Define(classStatement.Name);
+    }
+
     public object? VisitBinaryExpression(BinaryExpression expression)
     {
         Resolve(expression.Left);
