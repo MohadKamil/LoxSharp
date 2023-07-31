@@ -199,4 +199,10 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
 
         return null;
     }
+
+    public object? VisitGetExpression(GetExpression getExpression)
+    {
+        Resolve(getExpression.Object);
+        return null;
+    }
 }
