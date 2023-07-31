@@ -1,6 +1,6 @@
 ﻿namespace LoxSharp.Interpreting;
 
-public class LoxClass
+public class LoxClass : ICallable
 {
     private readonly string name;
 
@@ -13,4 +13,12 @@ public class LoxClass
     {
         return name;
     }
+
+    public object Call(Interpreter interpreter, IEnumerable<object> arguments)
+    {
+        var instance = new LoxInstance(this);
+        return instance;
+    }
+
+    public int Arity() => 0;
 }
