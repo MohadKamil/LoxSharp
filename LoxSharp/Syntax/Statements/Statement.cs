@@ -7,6 +7,14 @@ public abstract record Statement
     public abstract void Accept(IStatementVisitor visitor);
 }
 
+public record ClassStatement(Token Name, IEnumerable<FunctionStatement> Methods) : Statement
+{
+    public override void Accept(IStatementVisitor visitor)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public record ReturnStatement(Token ReturnKeyword, Expression? Value) : Statement
 {
     public override void Accept(IStatementVisitor visitor)
