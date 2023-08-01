@@ -13,4 +13,5 @@ public interface IVisitor<out TR>
     TR VisitGetExpression(GetExpression getExpression);
     TR VisitSetExpression(SetExpression setExpression);
     TR VisitThisExpression(ThisExpression thisExpression);
+    TR VisitSuperExpression(SuperExpression superExpression);
 }
