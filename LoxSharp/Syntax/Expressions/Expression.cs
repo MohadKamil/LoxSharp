@@ -9,7 +9,7 @@ public record SuperExpression(Token Keyword, Token Method) : Expression
 {
     public override TR Accept<TR>(IVisitor<TR> visitor)
     {
-        throw new NotImplementedException();
+        return visitor.VisitSuperExpression(this);
     }
 }
 
