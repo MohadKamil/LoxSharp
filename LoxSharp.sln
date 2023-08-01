@@ -7,6 +7,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{4806CA8A-0B44-4961-87C0-9C3A31442B1C}"
 	ProjectSection(SolutionItems) = preProject
 		Examples\fibonacci.txt = Examples\fibonacci.txt
+		Examples\HelloWorld.txt = Examples\HelloWorld.txt
 	EndProjectSection
 EndProject
 Global
