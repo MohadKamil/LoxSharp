@@ -9,7 +9,8 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
     enum ClassType
     {
         None = 0,
-        Class
+        Class,
+        SubClass
     }
     private ClassType currentClass = ClassType.None;
     enum FunctionType
@@ -151,6 +152,7 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         
         if (classStatement.SuperClass != null)
         {
+            currentClass = ClassType.SubClass;
             if (classStatement.SuperClass.Name.Lexeme == classStatement.Name.Lexeme)
             {
                 Lox.Error(classStatement.SuperClass.Name,
@@ -281,6 +283,16 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
 
     public object? VisitSuperExpression(SuperExpression superExpression)
     {
+        if (currentClass == ClassType.None)
+        {
+            Lox.Error(superExpression.Keyword,
+                "Can't use 'super' outside of a class.");
+        } else if (currentClass != ClassType.SubClass) 
+        {
+            Lox.Error(superExpression.Keyword,
+                "Can't use 'super' in a class with no superclass.");
+        }
+
         ResolveLocal(superExpression,superExpression.Keyword);
         return null;
     }
