@@ -218,6 +218,25 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         return LookupVariable(thisExpression.Keyword, thisExpression);
     }
 
+    public object VisitSuperExpression(SuperExpression superExpression)
+    {
+        var distance = locals[superExpression];
+        var superclass = (LoxClass)loxEnvironment.GetAt(
+            distance, "super")!;
+        
+        var obj = (LoxInstance)loxEnvironment.GetAt(
+            distance - 1, "this")!;
+        var method = superclass.GetMethod(superExpression.Method.Lexeme);
+
+        if (method == null)
+        {
+            throw new RuntimeException(superExpression.Method,
+                "Undefined property '" + superExpression.Method.Lexeme + "'.");
+        }
+
+        return method.Bind(obj);
+    }
+
     private static bool IsTruthy(object? @object)
     {
         return @object switch
@@ -330,12 +349,23 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
         }
         loxEnvironment.Define(classStatement.Name.Lexeme, null);
         
+        // Defining super environment has to be after the class is added to the global one
+        if (classStatement.SuperClass != null) 
+        {
+            loxEnvironment = new LoxEnvironment(loxEnvironment);
+            loxEnvironment.Define("super", superclass);
+        }
+        
         var loxFunctions = classStatement
             .Methods
             .Select(m => (m.Name.Lexeme,new LoxFunction(m, loxEnvironment, m.Name.Lexeme == "init")))
             .ToDictionary(p => p.Lexeme,p => p.Item2);
         var klass = new LoxClass(classStatement.Name.Lexeme,superclass as LoxClass,loxFunctions);
-        
+
+        if (classStatement.SuperClass != null)
+        {
+            loxEnvironment = loxEnvironment.ParentLoxEnvironment!;
+        }
         loxEnvironment.Assign(classStatement.Name, klass);
     }
 

@@ -65,6 +65,11 @@ public class ASTPrinter: IVisitor<string>
         throw new NotImplementedException();
     }
 
+    public string VisitSuperExpression(SuperExpression superExpression)
+    {
+        throw new NotImplementedException();
+    }
+
     private string Parenthesize(string name, params Expression[] expressions) {
         var builder = new StringBuilder();
 
