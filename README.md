@@ -20,7 +20,7 @@ This will run the interpreter in REPL mode and you will be able to execute state
 
 ### Passing Code Files
 
-you can pass lox file to intepreter by passing a path to it as command argument, below is an example using on of the included Lox example files
+you can pass lox file to intepreter by including a path to it as command argument, below is an example using on of the included Lox example files
 
 ```
 dotnet run --project .\LoxSharp\LoxSharp.csproj .\Examples\HelloWorld.txt
