@@ -157,6 +157,8 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
                     "A class can't inherit from itself.");
             }
             Resolve(classStatement.SuperClass);
+            BeginScope();
+            scopes.Peek()["super"] = true;
         }
         BeginScope();
         scopes.Peek()["this"] = true;
@@ -170,7 +172,11 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
             }
             ResolveFunction(method,functionType);
         }
-        
+
+        if (classStatement.SuperClass != null)
+        {
+            EndScope();
+        }
         EndScope();
         currentClass = enclosingClass;
     }
