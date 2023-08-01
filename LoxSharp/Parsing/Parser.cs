@@ -408,7 +408,6 @@ public class Parser
         {
             return new Literal(Previous().Literal);
         }
-
         if (Match(IDENTIFIER))
         {
             return new VarExpression(Previous());
@@ -419,7 +418,14 @@ public class Parser
             Consume(RIGHT_PAREN, "Expect ')' after expression.");
             return new Grouping(expr);
         }
-
+        if (Match(SUPER))
+        {
+            var keyword = Previous();
+            Consume(DOT, "Expect '.' after 'super'.");
+            var method = Consume(IDENTIFIER,
+                "Expect superclass method name.");
+            return new SuperExpression(keyword, method);
+        }
         throw Error(Peek(), "Expect expression.");
     }
 
