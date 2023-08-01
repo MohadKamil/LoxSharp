@@ -7,7 +7,7 @@ public abstract record Statement
     public abstract void Accept(IStatementVisitor visitor);
 }
 
-public record ClassStatement(Token Name, IEnumerable<FunctionStatement> Methods) : Statement
+public record ClassStatement(Token Name, VarExpression? SuperClass, IEnumerable<FunctionStatement> Methods) : Statement
 {
     public override void Accept(IStatementVisitor visitor)
     {

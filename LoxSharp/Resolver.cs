@@ -148,6 +148,16 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         currentClass = ClassType.Class;
         Declare(classStatement.Name);
         Define(classStatement.Name);
+        
+        if (classStatement.SuperClass != null)
+        {
+            if (classStatement.SuperClass.Name.Lexeme == classStatement.Name.Lexeme)
+            {
+                Lox.Error(classStatement.SuperClass.Name,
+                    "A class can't inherit from itself.");
+            }
+            Resolve(classStatement.SuperClass);
+        }
         BeginScope();
         scopes.Peek()["this"] = true;
 

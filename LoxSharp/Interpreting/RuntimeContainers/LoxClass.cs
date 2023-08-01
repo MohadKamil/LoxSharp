@@ -3,11 +3,13 @@
 public class LoxClass : ICallable
 {
     private readonly string name;
+    private readonly LoxClass? superClass;
     private readonly IDictionary<string, LoxFunction> methods;
 
-    public LoxClass(string name, IDictionary<string, LoxFunction> methods)
+    public LoxClass(string name, LoxClass? superClass, IDictionary<string, LoxFunction> methods)
     {
         this.name = name;
+        this.superClass = superClass;
         this.methods = methods;
     }
 
@@ -34,7 +36,9 @@ public class LoxClass : ICallable
 
     public LoxFunction? GetMethod(string methodName)
     {
-        return methods.TryGetValue(methodName, out var method) ? method : null;
+        return methods.TryGetValue(methodName, out var method) 
+            ? method 
+            : superClass?.GetMethod(methodName);
     }
     
 }

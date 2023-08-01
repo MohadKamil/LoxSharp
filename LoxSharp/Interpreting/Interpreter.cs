@@ -318,13 +318,23 @@ public class Interpreter : IVisitor<object>, IStatementVisitor
 
     public void VisitClassStatement(ClassStatement classStatement)
     {
+        object? superclass = null;
+        if (classStatement.SuperClass != null)
+        {
+            superclass = Evaluate(classStatement.SuperClass);
+            if (superclass is not LoxClass)
+            {
+                throw new RuntimeException(classStatement.SuperClass.Name,
+                    "Superclass must be a class.");
+            }
+        }
         loxEnvironment.Define(classStatement.Name.Lexeme, null);
         
         var loxFunctions = classStatement
             .Methods
             .Select(m => (m.Name.Lexeme,new LoxFunction(m, loxEnvironment, m.Name.Lexeme == "init")))
             .ToDictionary(p => p.Lexeme,p => p.Item2);
-        var klass = new LoxClass(classStatement.Name.Lexeme,loxFunctions);
+        var klass = new LoxClass(classStatement.Name.Lexeme,superclass as LoxClass,loxFunctions);
         
         loxEnvironment.Assign(classStatement.Name, klass);
     }

@@ -137,6 +137,14 @@ public class Parser
     private Statement ClassDeclaration()
     {
         var name = Consume(IDENTIFIER, "Expect class name.");
+
+        VarExpression? superClass = null;
+
+        if (Match(LESS))
+        {
+            Consume(IDENTIFIER, "Expect superclass name.");
+            superClass = new VarExpression(Previous());
+        }
         Consume(LEFT_BRACE, "Expect '{' before class body.");
 
         var methods = new List<FunctionStatement>();
@@ -146,7 +154,7 @@ public class Parser
 
         Consume(RIGHT_BRACE, "Expect '}' after class body.");
 
-        return new ClassStatement(name, methods);
+        return new ClassStatement(name,superClass, methods);
     }
 
     private Statement ReturnStatement()
