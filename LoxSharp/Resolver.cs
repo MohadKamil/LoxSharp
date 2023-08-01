@@ -278,4 +278,10 @@ public class Resolver : IStatementVisitor, IVisitor<object?>
         ResolveLocal(thisExpression,thisExpression.Keyword);
         return null;
     }
+
+    public object? VisitSuperExpression(SuperExpression superExpression)
+    {
+        ResolveLocal(superExpression,superExpression.Keyword);
+        return null;
+    }
 }

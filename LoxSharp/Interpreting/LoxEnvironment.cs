@@ -6,7 +6,7 @@ public class LoxEnvironment
 {
     private readonly IDictionary<string, object> values = new Dictionary<string, object>();
 
-    private readonly LoxEnvironment? parentLoxEnvironment;
+    public readonly LoxEnvironment? ParentLoxEnvironment;
 
     public LoxEnvironment(): this(null)
     {
@@ -15,7 +15,7 @@ public class LoxEnvironment
     
     public LoxEnvironment(LoxEnvironment? parentLoxEnvironment)
     {
-        this.parentLoxEnvironment = parentLoxEnvironment;
+        ParentLoxEnvironment = parentLoxEnvironment;
     }
 
     public void Define(string name, object value)
@@ -29,9 +29,9 @@ public class LoxEnvironment
         {
             return value;
         }
-        if (parentLoxEnvironment is not null)
+        if (ParentLoxEnvironment is not null)
         {
-            return parentLoxEnvironment.Get(name);
+            return ParentLoxEnvironment.Get(name);
         }
         throw new RuntimeException(name, "Undefined variable '" + name.Lexeme + "'.");
     }
@@ -44,9 +44,9 @@ public class LoxEnvironment
             return;
         }
 
-        if (parentLoxEnvironment is not null)
+        if (ParentLoxEnvironment is not null)
         {
-            parentLoxEnvironment.Assign(name,value);
+            ParentLoxEnvironment.Assign(name,value);
             return;
         }
         throw new RuntimeException(name, "Undefined variable '" + name.Lexeme + "'.");
@@ -60,7 +60,7 @@ public class LoxEnvironment
     private LoxEnvironment? Ancestor(int distance) {
         var environment = this;
         for (var i = 0; i < distance; i++) {
-            environment = environment?.parentLoxEnvironment; 
+            environment = environment?.ParentLoxEnvironment; 
         }
 
         return environment;
